@@ -1,0 +1,352 @@
+
+
+
+
+/* headings */
+
+body {
+	font-family: serif;
+	background-image: url(http://i64.tinypic.com/14dexxy.jpg);
+	background-repeat: repeat;
+	background-size: 500px;
+}
+
+h1 {
+	color: #181818;
+	text-align: center;
+	font-family: monospace;
+	font-size: 40px;
+}
+
+h2 {
+	color: #181818;
+	text-align: center;
+	font-family: monospace;
+	font-size: 32px;
+}
+
+h3 {
+	color: #181818;
+	text-align: center;
+	font-family: monospace;
+	text-align: left;
+	font-size: 20px;
+}
+
+h4 {
+	font-family: monospace;
+	color: #181818;
+	font-size: 15px;
+}
+
+.names {
+	font-family: serif;
+	font-weight: normal;
+	font-size: 18px;
+	text-align: center;
+}
+
+
+
+
+
+
+
+/* images */
+
+img {
+	display: inline-block;
+	position: relative;
+	vertical-align: middle;
+	height: 130px;
+}
+
+img.center {
+	display: block;
+	width: 400px;
+	height: 100%;
+	margin: auto;
+}
+
+img.center1 {
+	display: inline-block;
+	width: 95%;
+	height: 95%;
+	padding: 2%;
+}
+
+img.center2 {
+	display: inline-block;
+	width: 45%;
+	height: 45%;
+	padding: 15px;
+}
+
+img.center3 {
+	display: inline-block;
+	width: 30%;
+	height: 30%;
+	padding: 12px;
+}
+
+#loading-gif {
+	display: block;
+	margin: auto;
+	visibility: hidden;
+}
+
+.edge-detect1 {
+	display: inline-block;
+	height: 260px;
+}
+
+.edge-detect2 {
+	display: inline-block;
+	height: 200px;
+}
+
+.sample1 {
+	display: inline-block;
+	height: 300px;
+}
+
+
+
+
+
+
+
+
+/* paragraphs */
+
+p {
+	text-align: left;
+	color: black;
+}
+
+.center-txt {
+	text-align: center;
+}
+
+.code {
+	font-family: monospace;
+	color: #484a8d;
+}
+
+.caption {
+	font-size: 15px;
+	text-align: center;
+	color: #747474;
+}
+
+.caption2 {
+	font-size: 15px;
+	text-align: left;
+	color: #747474;
+}
+
+
+
+
+
+
+
+
+
+/* links */
+
+
+a.button {
+	text-decoration: none;
+	color: #181818;
+	font-size: 26px;
+	font-family: monospace;
+	font-weight: bold;
+}
+
+a.project-button {
+	text-decoration: none;
+	color: #181818;
+	font-size: 30px;
+	font-family: monospace;
+	font-weight: bold;
+}
+
+a.presentation-button {
+	text-decoration: none;
+	color: #181818;
+	font-size: 30px;
+	font-family: monospace;
+	font-weight: bold;
+}
+
+a.home-button {
+	font-size: 30px;
+	text-decoration: none;
+	color: #181818;
+	font-family: monospace;
+	font-weight: bold;
+}
+
+a:hover {
+	color: #FFFFFF;
+}
+
+.submit-button {
+	display: inline-block;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: monospace;
+	padding: 10px;
+	color: #181818;
+	width: 150px;
+	height: 80px;
+	border-color: #313131;
+	background-color: #D0D0D0;
+	border-width: 8px;
+	border-style: solid;
+	border-radius: 18px;
+}
+
+
+
+
+
+
+
+/* input */
+
+input[type="submit"]:hover{
+	color: white;
+	cursor: pointer;
+}
+
+input[type="reset"]:hover {
+	color: white;
+	cursor: pointer;
+}
+
+input {
+	border-color: black;
+	border-style: solid;
+	border-width: 2px;
+	height: 22px;
+}
+
+.input {
+	height: 22px;
+	width: 22px;
+}
+
+
+
+
+
+
+/* divs */
+
+div.button {
+	display: inline-block;
+	height: 40px;
+	width: 100px;
+	padding: 10px;
+	background-color: #D0D0D0;
+	border-color: #313131;
+	border-width: 8px;
+	border-style: solid;
+	border-radius: 18px;
+}
+
+div.project-button {
+	width: 150px;
+}
+
+div.documentation-button {
+	width: 200px;
+}
+
+div.buttons {
+	display: block;
+	position: fixed;
+	z-index: 100;
+	height: 80px;
+	top: 0px;
+	left: -10px;
+	width: 100%;
+	padding: 20px;
+	background-color: #4a4a4a;
+	border-bottom-width: 10px;
+	border-bottom-style: solid;
+	border-bottom-color: #313131;
+}
+
+
+.empty {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+}
+
+.underline {
+	display: block;
+	position: relative;
+	left: -20px;
+	width: 840px;
+	height: 14px;
+	background-color: #313131;
+}
+
+.smaller-underline {
+	display: block;
+	position: relative;
+	left: -20px;
+	width: 840px;
+	height: 7px;
+	background-color: #313131;
+}
+
+.display {
+	display: block;
+	width: 800px;
+	background-color: #FFFFFF; 
+	margin: auto;
+	padding: 20px;
+	border-color: #313131;
+	border-width: 15px;
+	border-style: solid;
+	border-radius: 15px;
+}
+
+#hide {
+	visibility: hidden;
+}
+
+div.form1 {
+	display: inline-block;
+	width: 525px;
+	text-align: left;
+	font-size: 18px;
+	font-family: monospace;
+}
+
+div.form2 {
+	display: inline-block;
+	width: 100px;
+	line-height: 20px;
+}
+
+
+
+
+
+
+/* angular js stuff */
+
+[ng/:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+
+
+
+

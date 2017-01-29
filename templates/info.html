@@ -1,0 +1,307 @@
+<div id="main">
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h1>Information</h1>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Matlab Functions</h2>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Matlab functions that we've created can be found on the Documentation page. <br><br>
+			Our Matlab functions:
+		</p>
+		<p class="code">
+			cross_stitch.m<br>
+			sample.m<br>
+			up_sample.m<br>
+			down_sample.m<br>
+			one_filter.m<br>
+			add_grid.m<br>
+			symbols.m<br>
+			quantize_pixel_8.m<br>
+			quantize_layer_8.m<br>
+			quantize_layer_27.m<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Built-in Matlab functions we used:
+		</p>
+		<p class="code">
+			imguidedfilter()<br>
+			imread()<br>
+			edge()<br>
+			rgbtoind()<br>
+			imgaussfilt()<br><br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Sampling</h2>
+		<div class="underline"></div>
+		<h3>Downsampling</h3>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Downsampling is when samples of a signal are removed to create a signal that is of shorter length. A simple example would be downsampling by 2 and removing every other sample from the signal.<br><br>
+			This was useful in our project because the main idea was taking an image and downsampling its pixels to the desired amount. The desired amount of pixels for a cross-stitch is (inches of cross stitch) * (fabric count).<br><br>
+			A complication that we came across was that sometimes we would need to downsample by a decimal number. This is impossible in digital signals.<br><br>
+		</p>
+		<p class="code">
+			x_1 = [0 1 2 3 4 5 6 7 8];<br>
+			x_2 = downsample(x_1, 2); % downsample x_1 by 2<br>
+			x_2 = [0 2 4 6 8];<br><br>
+		</p>
+		<div class="underline"></div>
+		<h3>Upsampling</h3>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Upsampling is similar to downsampling except you add in samples instead of taking them away. <br><br>
+			Originally, we used Matlab's upsample() function, but then we noticed that it filled in the new spaces with 0s instead of colored values. We made our own Matlab up_sample function that works as we had intended.<br><br>
+		</p>
+		<p class="code">
+			x_1 = [0 1 2 3 4];<br>
+			x_2 = upsample(x_1, 2); % upsample x_1 by 2 <br>
+			x_2 = [0 0 1 0 2 0 3 0 4 0]; <br><br>
+		</p>
+		<div class="underline"></div>
+		<h3>Multirate Sampling</h3>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Multirate sampling is how we solved the issue of originally needing to downsample by a decimal number. Mulirate sampling involes upsampling first by an integer, and then downsampling by an integer. <br><br>
+			An example: If you want to go from 100x100 to 45x45, you upsample first by 45 and then downsample by 100.<br><br>
+			A complication with this is that there is much data loss. You have to be careful with the filtering and sampling so the images are still distinquishable. <br><br>
+		</p>
+		<p class="code">
+			x_1 = [0 1 2 3];<br>
+			x_2 = up_sample(x_1, 3); % upsampled by 3 using our function<br>
+			x_2 = [0 0 0 1 1 1 2 2 2 3 3 3];<br>
+			x_3 = down_sample(x_2, 4); % x_2 downsampled by 4<br>
+			x_3 = [0 1 2];<br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<h3>The Effects of Sampling Sizes</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i66.tinypic.com/6h5eyw.jpg">
+		<img class="center3" src="http://i68.tinypic.com/21j1zyb.jpg">
+		<img class="center3" src="http://i64.tinypic.com/30w4cbk.jpg">
+		<p class="caption2">Downsampled to 96x96, 72x72, 48x48</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Filtering</h2>
+		<div class="underline"></div>
+		<p>
+			We looked towards filtering to clean up our sampled images. We wanted to smooth out the image while still preserving edges. A complication we came across was that smoothing sometimes resulted in colors ending up where they don't belong.<br> <br>   
+		</p>
+		
+		<div class="smaller-underline"></div><br>
+		<p>
+			Another way in which we wanted to clean up our images was by the removal of wandering pixels. We made our own functoin that looks at each pixel and compares it to surronding pixels. We had to be careful when implementing this in low-resolution images because sometimes you need a single pixel to represent a feature of the image. This especially became apparent with lettering.<br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i63.tinypic.com/2w6ctwg.jpg">
+		<img class="center2" src="http://i64.tinypic.com/34ordq1.jpg">
+		<p class="caption2">Notice how it's harder to read Dell after applying the filter</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			A way in which we thought we could avoid this word problem was to have the user identity the location of the words so we could avoid putting them through our clean-up filter. As of now the bounding box is only a rectangle so it can't fit words tightly. I also couldn't think of a way to add this to the user interface elegantly, so I ommitted it from our online program. <br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i65.tinypic.com/34dhbnp.jpg">
+		<img class="center2" src="http://i64.tinypic.com/dr6kz.jpg">
+		<img class="center2" src="http://i65.tinypic.com/34e9m39.jpg">
+		<img class="center2" src="http://i66.tinypic.com/2ir4tht.jpg">
+		<p class="caption2">The original image, the sampled image, the image with reduced colors, and the final filtered image</p>
+		<div class="smaller-underline"></div><br>
+		<h3>Linear Filters?</h3><br>
+		<div class="smaller-underline"></div><br>
+		<p>
+			To test if this filter was linear, we split the image up into two separate arrays and applied the filter to both arrays. We then combined the filtered arrays back together and compared it to the original filtered image. If they are equal, then this filter is linear. <br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i64.tinypic.com/15g35oh.jpg">
+		<img class="center2" src="http://i65.tinypic.com/2z5qjpi.jpg">
+		<p class="caption2">
+			The image on the left is the combination filtered image, and the one on the right is the original filtered image. As you can see, they are different. Therefore, this filter isn't linear.
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Edge Detection</h2>
+		<div class="underline"></div>
+		<p>
+			Edge detection is used to find the edges on an image. Edges are detected by measuring the change in intensity. The intensity of a pixel is essentially just its grayscale value. A large magnitude of change in the intensity between two pixels indicates that an edge is present. 
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			We chose to explore edge detection because many cross stitched pictures have an outline around some central figure or around the entire image. The way in which we decided to edge detect was with Matlab's edge detection functions, specifically 'Sobel'.<br><br>
+			Our process went like this:<br>
+			- Sample and filter original image <br>
+			- Change image to grayscale <br>
+			- Use edge detection function to make edge matrix<br>
+			- Invert elements of edge matrix<br>
+			- Multiply the sampled and filtered image by the edge matrix<br>
+			- Edges become black and other pixels retain original color<br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			We had some complications with our edge detection. Sometimes the edge detection made the cross-stitch less distinguishable, as the edges covered up large amounts of the image. Another issue was if the height and width were small, the edges could be spotty or incomplete (as you will see in our example.) The third and final issue was if the image was dark, the edges were extremely difficult to see. <br><br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<h3>Original, Cross-Stitch, and Cross-Stitch with Edges</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i64.tinypic.com/qp3p6f.jpg">
+		<img class="center3" src="http://i68.tinypic.com/2ed71py.jpg">
+		<img class="center3" src="http://i64.tinypic.com/ajx7nk.jpg">
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Color Quantization and Color Indexing</h2>
+		<div class="underline"></div>
+		<p>
+			Cross-stitchers don't have access to infinite amounts of colors. They have a set amount of string. This is why for our cross-stitch generator we have a 'number of colors' input, and this is also why we had looked into color quantization and color indexing. <br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Generally, color quantization rounds each pixel to the nearest color from the predetermined number of colors. We wrote our own color quantization functions. Our first function allowed 8 possible colors: it rounded each pixel on each later up to 255 or down to 0. Our second function allowed 27 possible colors: it rounded each pixel in each layer to either 0, 127, or 255. Some complications we had with this were determining what the best colors were for each image, and trying to avoid most of the colors becoming either black or white. We didn't end up using these functions for our final project.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center1" src="http://i68.tinypic.com/iljadu.jpg">
+		<p class="caption2">
+			From top left to bottom right: original image, image quantized by layer with 8 colors, image quantized by later with 27 colors, image quantized by pixel with 8 colors, image indexed with 8 colors, and image indexed with 27 colors.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center1" src="http://i64.tinypic.com/au7cr6.jpg">
+		<p class="caption2">
+			From top left to bottom right: original image, image quantized by layer with 8 colors, image quantized by later with 27 colors, image quantized by pixel with 8 colors, image indexed with 8 colors, and image indexed with 27 colors.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<img class="center1" src="http://i65.tinypic.com/10p64pl.jpg">
+		<p class="caption2">
+			From top left to bottom right: original image, image quantized by layer with 8 colors, image quantized by later with 27 colors, image quantized by pixel with 8 colors, image indexed with 8 colors, and image indexed with 27 colors.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<h3>Color Quantization with 8 Colors</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i68.tinypic.com/2wnxzkk.jpg">
+		<img class="center2" src="http://i66.tinypic.com/10ifh51.jpg">
+		<div class="smaller-underline"></div><br>
+		<h3>Color Quantization with 27 Colors</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i63.tinypic.com/14xhra0.jpg">
+		<img class="center2" src="http://i66.tinypic.com/zkian4.jpg">
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i64.tinypic.com/ng7cs9.jpg">
+		<img class="center2" src="http://i64.tinypic.com/2mydax5.jpg">
+		<div class="smaller-underline"></div><br>
+		<p>
+			Color indexing is a method for compressing data. It replaces the 3-dimensional RGB matrix with a 2-dimensional matrix and a 1 by n by 3 matrix, where each element of the 2D matrix can be an integer from 0 to n, where n is the number of colors. This allows the main image matrix to store only a single integer for each pixel, instead of three values (red, green, blue). Thus, color indexnig allows images to be stored with greater efficiency, but reduces the color quality.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			Matlab has a very effective function for indexing an image matrix. The function allows the user to specify the number of colors to be used thereby solving one of the major problems we had with our quantizing functions. Furthermore, Matlab's function uses a different color palette for different images. In other words, if image A is mostly blue and green, and the indexing function is told to use two colors, then the index version of image A will have one shade of blue and one shade of green in its color palette. Matlab's indexing function produced images that resemble their original versions much more than the images from our quantizing functions.<br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<h3>Color Indexing with 8 Colors</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i68.tinypic.com/33bo1z8.jpg">
+		<img class="center2" src="http://i63.tinypic.com/169f1iq.jpg">
+		<div class="smaller-underline"></div><br>
+		<h3>The Effects of Changing the Number of Colors</h3><br>
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i68.tinypic.com/254vs5s.jpg">
+		<img class="center3" src="http://i68.tinypic.com/i4kbcm.jpg">
+		<img class="center3" src="http://i66.tinypic.com/wulzch.jpg">
+		<p class="caption2">Number of colors set to 14, 8, 4</p>
+		<div class="underline"></div>
+		<img class="center3" src="http://i64.tinypic.com/2czef06.jpg">
+		<img class="center3" src="http://i68.tinypic.com/2zhp27o.jpg">
+		<img class="center3" src="http://i63.tinypic.com/15qqd7r.jpg">
+		<p class="caption2">Number of colors set to 14, 8, 4</p>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Grids</h2>
+		<div class="underline"></div>
+		<p>
+			I wanted the cross-stitch outputs of our website to have an authentic look, so I thought of adding the grid overlay to the pixel images. Cross-stitches have this grid so the user can keep track of where they are more easily. Every tenth line is thicker for better ease in counting.<br>
+		</p>
+		<div class="smaller-underline"></div>
+		<h3>With and Without Grids</h3>
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i67.tinypic.com/332q6a9.jpg">
+		<img class="center2" src="http://i64.tinypic.com/u3eab.jpg">
+		<div class="smaller-underline"></div><br>
+		<img class="center2" src="http://i63.tinypic.com/2llnluw.jpg">
+		<img class="center2" src="http://i68.tinypic.com/24qrdb8.jpg">
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Symbols</h2>
+		<div class="underline"></div>
+		<p>
+			It is common to see cross-stitch patterns represented as symbols in the grid instead of colored-boxes. These symbols could represent different colors, different types of stitches, etc. I thought it would be neat if we would also had an output of the symbol pattern for the user's image. <br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<p>
+			I tried to achieve this by using the indexed graph from the cross-stitch and assigning each index to a different symbol. This created a text file. When I tried to turn the text file into an image I struggled with lining it up to the grid axes. My attempts are below. <br>
+		</p>
+		<div class="smaller-underline"></div><br>
+		<h3>Original, Cross-Stitch, and Symbol Images</h3>
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i65.tinypic.com/jjpv15.jpg">
+		<img class="center3" src="http://i64.tinypic.com/2cfdpxg.jpg">
+		<img class="center3" src="http://i66.tinypic.com/2eap7c5.jpg">
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i65.tinypic.com/2rdz0vl.jpg">
+		<img class="center3" src="http://i66.tinypic.com/bgqntc.jpg">
+		<img class="center3" src="http://i63.tinypic.com/20pvdpw.jpg">
+		<div class="smaller-underline"></div><br>
+		<img class="center3" src="http://i64.tinypic.com/2wpnebn.jpg">
+		<img class="center3" src="http://i63.tinypic.com/2ppymoo.jpg">
+		<img class="center3" src="http://i68.tinypic.com/jfdxk1.jpg">
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Some Tests</h2>
+		<div class="underline"></div><br>
+		<img class="center1" src="http://i63.tinypic.com/15qdzes.jpg">
+		<img class="center1" src="http://i64.tinypic.com/9awz7c.jpg">
+		<div class="underline"></div>
+		<img class="center2" src="http://i68.tinypic.com/mlm61k.jpg">
+		<img class="center2" src="http://i66.tinypic.com/1441x7q.jpg">
+		<div class="underline"></div><br>
+	</div>
+</div>
+

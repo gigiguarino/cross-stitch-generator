@@ -1,0 +1,538 @@
+<div id="main">
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h1>Documentation</h1>
+		<div class="underline"></div>
+		<p>
+			For this project we used Matlab, Python, HTML, CSS, and JavaScript. <br>
+			Matlab for the image processing. <br>
+			Python to call Matlab and process the user inputs. <br>
+			HTML and CSS for the website design. <br>
+			JavaScript for the input submission and to call the Python scripts. <br>
+		</p>
+		<div class="underline"></div><br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>cross_stitch.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function calls all the other functions needed to create the cross-stitch. 
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function [stitch, indexed, map] = cross_stitch(image, new_height, new_width)<br>
+			&#8195;&#8195;stitch = sample(image, new_height, new_width);<br>
+			&#8195;&#8195;filt_stitch = imguidedfilter(stitch);<br>
+			&#8195;&#8195;[indexed, map] = rgb2ind(filt_stitch, num_colors);<br>
+			&#8195;&#8195;indexed = one_filter(indexed);<br>
+			&#8195;&#8195;figure;<br>
+			&#8195;&#8195;imagesc(indexed);<br>
+			&#8195;&#8195;colormap(map);<br>
+			&#8195;&#8195;add_grid(new_height, new_width);<br>
+			&#8195;&#8195;symbol_image = symbols(indexed);<br>
+			&#8195;&#8195;dlmwrite('symbols.txt', symbol_image, ' ');<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>sample.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function calls the downsample and upsample functions.
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function new_image = sample(image, height_out, width_out)<br>
+			&#8195;&#8195;sizes = size(image);<br>
+			&#8195;&#8195;height_in = sizes(1);<br>
+			&#8195;&#8195;width_in = sizes(2);<br>
+			&#8195;&#8195;dim = sizes(3);<br><br>
+			&#8195;&#8195;new_image = down_sample(imgaussfilt(up_sample(image, dim, height_out, width_out), 1), dim, height_in, width_in);<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>up_sample.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function upsamples the original image to a larger size so when we want to downsample to our desired size we are always downsampling by an integer rate.
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function up_sampled = up_sample(image, dim, height_mult, width_mult)<br>
+			&#8195;&#8195;sizes = size(image);<br>
+			&#8195;&#8195;height_in = sizes(1);<br>
+			&#8195;&#8195;width_in = sizes(2);<br><br>
+			&#8195;&#8195;tic<br>
+			&#8195;&#8195;temp = uint8(0);<br>
+			&#8195;&#8195;up_sample_temp(height_in, width_mult * width_in) = temp;<br>
+			&#8195;&#8195;toc<br><br>
+			&#8195;&#8195;for row = (1:height_in)<br>
+			&#8195;&#8195;&#8195;&#8195;for col = (1:width_in)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for us_col = (1:width_mult)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for color = (1:dim)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;up_sample_temp(row, (width_mult*(col-1)+us_col), color) = image(row, col, color);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;toc<br>
+			&#8195;&#8195;up_sampled(height_in*height_mult, width_in*width_mult) = temp;<br>
+			&#8195;&#8195;toc<br><br>
+			&#8195;&#8195;for col = (1:(width_in*width_mult))<br>
+			&#8195;&#8195;&#8195;&#8195;for row = (1:height_in)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for us_row = (1:height_mult)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for color = (1:dim)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;up_sampled((height_mult*(row-1)+us_row), col, color) = up_sample_temp(row, col, color);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br>
+			&#8195;&#8195;toc<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>down_sample.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function downsamples the upsampled cross-stitch to the final desired size. 
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function down_sampled = down_sample(image, dim, height_div, width_div)<br>
+			&#8195;&#8195;sizes = size(image);<br>
+			&#8195;&#8195;height_in = sizes(1);<br>
+			&#8195;&#8195;width_in = sizes(2);<br><br>
+			&#8195;&#8195;height_out = height_in / height_div;<br>
+			&#8195;&#8195;width_out = width_in / width_div; <br><br>
+			&#8195;&#8195;temp = uint8(0);<br><br>
+			&#8195;&#8195;down_sampled(height_out, width_out) = temp;<br><br>
+			&#8195;&#8195;for row = (1:height_out)<br>
+			&#8195;&#8195;&#8195;&#8195;for col = (1:width_out)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for color = (1:dim)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;down_sampled(row, col, color) = image(row*height_div, col*width_div, color);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>one_filter.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function filters the cross-stitch pattern. 
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function indexed = one_filter(indexed)<br>
+			&#8195;&#8195;sizes = size(indexed);<br>
+			&#8195;&#8195;temp = unint8(0);<br>
+			&#8195;&#8195;surrounding(9) = temp;<br><br>
+			&#8195;&#8195;for row = (2:sizes(2)-1)<br>
+			&#8195;&#8195;&#8195;&#8195;for col = (2:sizes(2)-1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(1) = indexed(row-1, col-1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(2) = indexed(row-1, col);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(3) = indexed(row-1, col+1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(4) = indexed(row, col-1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(5) = indexed(row, col);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(6) = indexed(row, col+1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(7) = indexed(row+1, col-1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(8) = indexed(row+1, col);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;surrounding(9) = indexed(row+1, col+1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;num_match = 0; <br><br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for i = (1:9)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if (i ~= 5)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if (surrounding(i) == surrounding(5))<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;num_match = num_match+1;<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br><br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;one = surrounding(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;two = surrounding(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;three = surrounding(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;four = surrounding(4);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;five = surrounding(5);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;six = surrounding(6);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;seven = surrounding(7);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;eight = surrounding(8);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;nine = surrounding(9);<br><br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if (one == two && one == three && one == four && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;one == six && one == seven && one == eight && one == nine)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surrounding(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (num_match == 0)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = mode(surrounding);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (num_match == 1 && five ~= two && five ~= four && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;five ~= six && five ~= eight)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = mode(surrounding);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (one == two && one == three && one == four && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;one == six && one ~= five && one ~= seven && one ~= nine)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surrounding(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (one == two && one == four && one == seven && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;one == eight && one ~= five && one ~= three && one ~= nine)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surronding(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (four == seven && four == eight && four == nine && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;four == six && four ~= five && four ~= one && four ~= three)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surrounding(4);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif (two == three && two == six && two == eight && <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;two == nine && two ~= five && two ~= seven && two ~= one)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surrounding(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;indexed(row, col) = surrounding(5);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>add_grid.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function overlays a grid on top of the newly sampled cross-stitch image.
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function add_grid()<br>
+			&#8195;&#8195;hold on <br><br>
+			&#8195;&#8195;dark = [.3 .3 .3];<br>
+			&#8195;&#8195;light = [.8 .8 .8];<br><br>
+			&#8195;&#8195;for i = (1:height)<br>
+			&#8195;&#8195;&#8195;&#8195;z = i-0.5;<br>
+			&#8195;&#8195;&#8195;&#8195;if (mod(i, 10) == 0)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([1 width], [z z], 'Color', dark);<br>
+			&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([1 width], [z z], 'Color', dark, 'LineStyle', '-');<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([1 width], [z z], 'Color', light, 'LineStyle', '--');<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;for i = (1:width)<br>
+			&#8195;&#8195;&#8195;&#8195;z = i-0.5;<br>
+			&#8195;&#8195;&#8195;&#8195;if (mod(i,10) == 0)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([z z], [1 height], 'Color', dark);<br>
+			&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([z z], [1 height], 'Color', dark, 'LineStyle', '-');<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;line([z z], [1 height], 'Color', light, 'LineStyle', '--');<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>symbols.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function takes the indexed array we get from our sampled image and turns the color indexes into corresponding symbols. 
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function symbol_image = symbols(image)<br>
+			&#8195;&#8195;symbol_dict = ['0', '#', '&', 'X', '-', '$', '*', 'Z', 'I', '%', '+', '^', '<', 'H', '!'];<br><br>
+			&#8195;&#8195;sizes = size(image);<br>
+			&#8195;&#8195;height = sizes(1);<br>
+			&#8195;&#8195;width = sizes(2);<br><br>
+			&#8195;&#8195;symbol_image = zeros(height, width);<br>
+			&#8195;&#8195;symbol_image = char(symbol_image);<br><br>
+			&#8195;&#8195;for i = (1:height)<br>
+			&#8195;&#8195;&#8195;&#8195;for j = (1:width)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;num = image(i,j);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;num = num + 1;<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;symbol_image(i,j) = symbol_dict(num);<br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>quantize_pixel_8.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function..
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function [ quantized ] = quantize_pixel_8( image_in )<br>
+			&#8195;&#8195;% Color Palette<br>
+			&#8195;&#8195;black = [ 0, 0, 0 ];<br>
+			&#8195;&#8195;red = [ 1, 0, 0 ];<br>
+			&#8195;&#8195;yellow = [ 1, 1, 0 ];<br>
+			&#8195;&#8195;green = [ 0, 1, 0 ];<br>
+			&#8195;&#8195;cyan = [ 0, 1, 1 ];<br>
+			&#8195;&#8195;blue = [ 0, 0, 1 ];<br>
+			&#8195;&#8195;magenta = [ 1, 0, 1 ];<br>
+			&#8195;&#8195;white = [ 1, 1, 1 ];<br><br>
+			&#8195;&#8195;colors = [ black; red; yellow; green; cyan; blue; magenta; white ];<br>
+			&#8195;&#8195;colors = double( colors );<br><br>
+			&#8195;&#8195;% Convert image to double<br>
+			&#8195;&#8195;image_in = im2double( image_in );<br>
+			&#8195;&#8195;[ rows, cols, layers ] = size( image_in );<br><br>
+			&#8195;&#8195;for i = 1:rows <br>			    
+			&#8195;&#8195;&#8195;&#8195;for j = 1:cols	<br>		        
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dist_to_color = [];	<br>		        
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;for k = 1:8<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dist_to_color(k) = sqrt( ( image_in( i, j, 1) - colors(k,1 ) )^2 + (image_in(i,j,2) - colors(k,2))^2 + ...
+			                (image_in(i,j,3) - colors(k,3))^2 );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br><br>	      
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;[ M, Ind ] = min( dist_to_color );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;image_in( i, j, 1 ) = colors( Ind, 1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;image_in( i, j, 2 ) = colors( Ind, 2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;image_in( i, j, 3 ) = colors( Ind, 3);<br>  
+			&#8195;&#8195;&#8195;&#8195;end<br>    
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;quantized = im2uint8( image_in );<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>quantize_layer_8.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function..
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function [ quantized ] = quantize_layer_8( image )<br><br>
+			&#8195;&#8195;% Store the layers<br>
+			&#8195;&#8195;redlayer = image( :, :, 1 ); <br>
+			&#8195;&#8195;greenlayer = image( :, :, 2 );<br>
+			&#8195;&#8195;bluelayer = image( :, :, 3 );<br><br>
+			&#8195;&#8195;% Possible values<br>
+			&#8195;&#8195;values = [ 0, 255 ];<br><br>
+			&#8195;&#8195;[ rows, cols, layers ] = size( image );<br><br>
+			&#8195;&#8195;% Round the red layer values<br>
+			&#8195;&#8195;for i = 1:rows <br>			    
+			&#8195;&#8195;&#8195;&#8195;for j = 1:cols<br>			    
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( redlayer( i, j ) - values(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( redlayer( i, j ) - values(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = values(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = values(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = values(1); % if exactly midway, round down<br>   
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>		        
+			&#8195;&#8195;&#8195;&#8195;end<br>			    
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;% Round the green layer values<br>
+			&#8195;&#8195;for i = 1:rows<br>			    
+			&#8195;&#8195;&#8195;&#8195;for j = 1: cols<br>			    
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( greenlayer( i, j ) - values(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( greenlayer( i, j  ) - values(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j  ) = values(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j  ) = values(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j  ) = values(1); % if exactly midway, round down<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>			    
+			&#8195;&#8195;&#8195;&#8195;end<br> 
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;% Round the blue layer values<br>
+			&#8195;&#8195;for i = 1:rows<br>   
+			&#8195;&#8195;&#8195;&#8195;for j = 1: cols<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( bluelayer( i, j  ) - values(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( bluelayer( i, j  ) - values(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j  ) = values(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j  ) = values(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j  ) = values(1); % if exactly midway, round down<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>			    
+			&#8195;&#8195;&#8195;&#8195;end<br>			    
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;quantized = cat( 3, redlayer, greenlayer, bluelayer );<br>
+			end <br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>quantize_layer_27.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function..
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			function [ quantized ] = quantize_layer_27( image )<br>
+			&#8195;&#8195;% Store the layers<br>
+			&#8195;&#8195;redlayer = image( :, :, 1 ); <br>
+			&#8195;&#8195;greenlayer = image( :, :, 2 );<br>
+			&#8195;&#8195;bluelayer = image( :, :, 3 );<br><br>
+			&#8195;&#8195;% Possible values<br>
+			&#8195;&#8195;map = [ 0, 127, 255 ];<br>
+			&#8195;&#8195;[ rows, cols, layers ] = size( image );<br><br>
+			&#8195;&#8195;% Round the red layer values<br>
+			&#8195;&#8195;for i = 1:rows<br>
+			&#8195;&#8195;&#8195;&#8195;for j = 1:cols<br>   
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( redlayer( i, j ) - map(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( redlayer( i, j ) - map(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(3) = abs( redlayer( i, j ) - map(3) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2) <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(2) > dif(3)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = map(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;nd<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = map(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;redlayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end  <br> 
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;% Round the green layer values<br>
+			&#8195;&#8195;for i = 1:rows<br>
+			&#8195;&#8195;&#8195;&#8195;for j = 1:cols<br> 
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( greenlayer( i, j ) - map(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( greenlayer( i, j ) - map(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(3) = abs( greenlayer( i, j ) - map(3) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2) <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(2) > dif(3)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j ) = map(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j ) = map(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;greenlayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end <br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;% Round the blue layer values<br>
+			&#8195;&#8195;for i = 1:rows<br>  
+			&#8195;&#8195;&#8195;&#8195;for j = 1:cols<br>   
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(1) = abs( bluelayer( i, j ) - map(1) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(2) = abs( bluelayer( i, j ) - map(2) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;dif(3) = abs( bluelayer( i, j ) - map(3) );<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(1) > dif(2) <br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;if dif(2) > dif(3)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j  ) = map(2);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;elseif dif(2) > dif(1)<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j ) = map(1);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;else<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;bluelayer( i, j ) = map(3);<br>
+			&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;end <br>
+			&#8195;&#8195;&#8195;&#8195;end<br>
+			&#8195;&#8195;end<br><br>
+			&#8195;&#8195;quantized = cat( 3, redlayer, greenlayer, bluelayer);  <br>    
+			end
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<div class="underline"></div>
+		<h2>linearity.m</h2>
+		<div class="underline"></div>
+		<p>
+			This function..
+		</p>
+		<div class="underline"></div>
+		<p class="code">
+			upsR(:,:,1) = ups(:,:,1);<br>
+			upsR(:,:,2:3) = 0;<br>
+			upsG(:,:,2) = ups(:,:,2);<br>
+			upsG(:,:,1) = 0;<br>
+			upsG(:,:,3) = 0;<br>
+			upsB(:,:,3) = ups(:,:,3);<br>
+			upsB(:,:,1:2) = 0;<br><br>
+
+			upsRstitch = sample(upsR, 40, 40);<br>
+			upsGstitch = sample(upsG, 40, 40);<br>
+			upsBstitch = sample(upsB, 40, 40);<br><br>
+
+			upsRGBstitch = upsRstitch+upsGstitch+upsBstitch;<br>
+			upsstitch = sample(ups, 40, 40);<br><br>
+
+			ups1(1:2:99, :, :) = ups(1:2:99, :, :);<br>
+			ups1(2:2:100, :, :) = 0;<br>
+			ups2(2:2:100, :, :) = ups(2:2:100, :, :);<br>
+			ups2(1:2:99, :, :) = 0;<br><br>
+
+			ups1stitch = sample(ups1, 40, 40);<br>
+			ups2stitch = sample(ups2, 40, 40);<br><br>
+
+			ups12stitch = ups1stitch+ups2stitch;<br><br>
+
+			ups1filt = imguidedfilter(ups1);<br>
+			ups2filt = imguidedfilter(ups2);<br>
+			ups12filt = ups1filt+ups2filt;<br><br>
+
+			upsRfilt = imguidedfilter(upsR);<br>
+			upsGfilt = imguidedfilter(upsG);<br>
+			upsBfilt = imguidedfilter(upsB);<br><br>
+
+			upsRGBfilt = upsRfilt+upsGfilt+upsBfilt;<br><br>
+
+			upsfilt = imguidedfilter(ups);<br><br>
+
+			[upsind, upsmap] = rgb2ind(upsstitch, 3);<br><br>
+
+			ups1ind(1:2:39, :) = upsind(1:2:39, :);<br>
+			ups1ind(40, :) = 0;<br>
+			ups2ind(2:2:40, :) = upsind(2:2:40, :);<br><br>
+
+			ups1one = one_filter(ups1ind);<br>
+			ups2one = one_filter(ups2ind);<br><br>
+
+			ups12one = ups1one + ups2one;<br><br>
+
+			upsone = one_filter(upsind);<br><br>
+
+			[ups40R, indR, mR] = cross_stitch(upsR, 45, 45, 3);<br>
+			[ups40G, indG, mG] = cross_stitch(upsG, 45, 45, 3);<br>
+			[ups40B, indB, mB] = cross_stitch(upsB, 45, 45, 3);<br><br>
+
+			indRGB = indR+indG+indB;<br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+</div>
+
+

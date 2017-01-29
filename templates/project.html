@@ -1,0 +1,88 @@
+<div id="main">
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h1>Image to Cross-stitch Pattern Converter</h1>
+		<div class="underline"></div>
+		<p>
+			To convert an image to a cross-stitch pattern, you need to input the link to the image, the maximum height and width of your desired cross-stitch, and the count of the fabric you are using. To avoid distortion of your image, we will scale your image to fit inside your desired height and width. <br><br>
+			JPEGs only please
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Inputs</h2>
+		<div class="underline"></div>
+		<br>
+		<p>
+			<ul>
+				<li>A link to your image (http://www)</li>
+				<li>The maximum height and width of your desired cross-stitch, in inches</li>
+				<li>Your fabric count (stitches/inch)</li>
+				<li>The number of different colors you want in your cross-stitch. </li>
+			</ul>
+		</p>
+		<br>
+		<form id="form">
+			<div class="smaller-underline"></div><br>
+			<div class="form1" align="left">
+				Link to image:<br><br>
+			</div>
+			<div class="form2">
+				<input type="text" id="img-link"><br><br>
+			</div>
+			<div class="smaller-underline"></div><br>
+			<div class="form1" align="left">
+				Maximum height of cross-stitch (inches):<br><br>
+				Maximum width of cross-stitch (inches):<br><br>
+			</div>
+			<div class="form2">
+				<input type="text" id="max-height"><br><br>
+				<input type="text" id="max-width"><br><br>
+			</div>
+			<div class="smaller-underline"></div><br>
+			<div class="form1" align="left">
+				Fabric count:<br><br>
+				Number of colors (1-10): <br><br>
+			</div>
+			<div class="form2">
+				<input type="text" id="fabric-count"><br><br>
+				<input type="text" id="num-colors"><br><br>
+			</div>
+			<div class="smaller-underline"></div><br>
+			<br><br>
+			<div align="center">
+				<input class="submit-button" id="submit" type="submit">
+				<input class="submit-button" id="reset" type="reset">
+			</div>
+			<br>
+		</form>
+		<br>
+		<img id="loading-gif" src="http://i64.tinypic.com/255juc2.gif">
+		<br>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display" id="hide">
+		<br>
+		<div class="underline"></div>
+		<h3>Your image:</h3>
+		<div class="underline"></div>
+		<br>
+		~Your image~
+		<br><br>
+		<div class="underline"></div>
+		<h3>Your cross-stitch pattern(s):</h3>
+		<div class="underline"></div>
+		<br>
+		~Output~
+		<br><br>
+		<div class="underline"></div>
+		<br>
+	</div>
+</div>

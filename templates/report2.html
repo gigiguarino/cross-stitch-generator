@@ -1,0 +1,317 @@
+<div>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h1>Project Progress Report #1</h1>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Data</h2>
+		<div class="underline"></div>
+		<h3>Edge Detection</h3>
+		<div class="underline"></div>
+		<p>
+			The following matlab code runs the xstitch function and combines the edge detection image with the original. It shows the original image, but scaled to be brighter, and very dark edges that are drawn on.  
+		</p>
+		<p class="code">
+			image1 = imread('BlockMich.jpg');<br>
+			image2 = xstitch(image1);<br>
+			image1 = double(image1);<br>
+			image2 = round(image2);<br>
+			<br>
+			scaleFactor = 2.1;<br>
+			image1(:, :, 1) = image1(:, :, 1) .* scaleFactor .* image2;<br>
+			image1(:, :, 2) = imege1(:, :, 2) .* scaleFactor .* image2;<br>
+			image1(:, :, 3) = image1(:, :, 3) .* scaleFactor .* image2;<br>
+			<br>
+			image1 = uint8(image1);<br>
+			<br>
+			figure();<br>
+			imshow(image1);<br>
+			title('Version of image with greater contrast');<br>
+		</p>
+		<div class="underline"></div>
+		<h3>Images</h3>
+		<div class="underline"></div>
+		<br>
+		<div align="center">
+			<img class="edge-detect1" src="http://i67.tinypic.com/farggw.jpg"/>
+			<img class="edge-detect1" src="http://i65.tinypic.com/1491o52.jpg"/>
+		</div>
+		<br>
+		<div class="underline"></div>
+		<p>
+			The following matlab code is for a function that produces an NxN matrix with averaged edge detection values 0 through 1 (file needs to be saved as xstitch.m).
+		</p>
+		<p class="code">
+			function[xstitched] = xstitch(image1)<br>
+			<br>
+			image1 = double(image1);<br>
+			<br>
+			redlayer = image1(:, :, 1);<br>
+			greenlayer = image1(:, :, 2);<br>
+			bluelayer = iamge1(:, :, 3);<br>
+			<br>
+			redEdges = edge(redlayer, 'Sobel');<br>
+			greenEdges = edge(greenlayer, 'Sobel');<br>
+			blueEdges = edge(bluelayer, 'Sobel');<br>
+			<br>
+			redEdges = 1 - redEdges;<br>
+			figure(1);<br>
+			imshow(redEdges);<br>
+			title('Edge detection for red layer');<br>
+			<br>
+			greenEdges = 1 - greenEdges;<br>
+			figure(2);<br>
+			imshow(greenEdges);<br>
+			title('Edge detection for green layer');<br>
+			<br>
+			blueEdges = 1 - blueEdges;<br>
+			figure(3);<br>
+			imshow(blueEdges);<br>
+			title('Edge detection for blue layer');<br>
+			<br>
+			imageEdges(:, :, 1) = redEdges;<br>
+			imageEdges(:, :, 2) = greenEdges;<br>
+			imageEdges(:, :, 3) = blueEdges;<br>
+			<br>
+			combinedImage = (redEdges + greenEdges + blueEdges) ./ 3;<br>
+			<br>
+			xstitched = combinedImage;<br>
+			end<br>
+		</p>
+		<div class="underline"></div>
+		<h3>Output Images</h3>
+		<div class="underline"></div>
+		<br>
+		<div align="center">
+			<img class="edge-detect2" src="http://i67.tinypic.com/2hchld0.jpg"/>
+			<img class="edge-detect2" src="http://i63.tinypic.com/qzky92.jpg"/>
+			<img class="edge-detect2" src="http://i64.tinypic.com/r09fdg.jpg"/>
+		</div>
+		<br>
+		<div class="underline"></div>
+		<h3>Sampling</h3>
+		<div class="underline"></div>
+		<p>
+			This is the Matlab code for the function that upsamples and downsamples an image. The reason we both upsample and downsample is because if we were to only downsample, sometimes we would be downsampling by a decimal number, not an integer, so if we upsample to a larger value and downsample to the desired value, we avoid this problem.
+		</p>
+		<p class="code">
+				image = imread('test_pics/pic1.jpg');<br>
+				<br>
+				image = double(image);<br>
+				image_red = image(:, :, 1);<br>
+				image_green = image(:, :, 2);<br>
+				image_blue = image(:, :, 3);<br>
+				<br>
+				height_in = 5; % inches<br>
+				width_in = 5;<br>
+				<br>
+				fc = 11; % fabric count<br>
+				<br>
+				sizes = size(image);<br>
+				height_px = sizes(1); % pixels<br>
+				width_px = sizes(2);<br>
+				<br>
+				us_height = height_in * fc;<br>
+				us_width = width_in * fc;<br>
+				<br>
+				ds_height = height_px;<br>
+				ds_width = width_px;<br>
+				<br>
+				% width<br>
+				% upsample<br>
+				% then downsample<br>
+				<br>
+				us_red1 = zeros(height_px, us_width * width_px);<br>
+				us_green1 = us_red1;<br>
+				us_blue1 = us_green1;<br>
+				<br>
+				ds_red1 = zeros(height_px, width_in * fc);<br>
+				ds_green1 = ds_red1;<br>
+				ds_blue1 = ds_green1;<br>
+				<br>
+				for n = (1:height_px)<br>
+					us_red1(n, :) = upsample(image_red(n, :), us_width);<br>
+					us_green1(n, :) = upsample(image_green(n, :), us_width);<br>
+					us_blue1(n, :) = upsample(image_blue(n, :), us_width);<br>
+				end<br>
+				<br>
+				for n = (1:height_px)<br>
+					ds_red1(n, :) = downsample(us_red1(n, :), ds_width);<br>
+					ds_green1(n, :) = downsample(us_green1(n, :), ds_width);<br>
+					ds_blue1(n, :) = downsample(us_blue1(n, :), ds_width);<br>
+				end
+				<br>
+				% height<br>
+				% upsample<br>
+				% then downsample<br>
+				<br>
+				us_red2 = zeros(height_px * us_height, width_in * fc);<br>
+				us_green2 = us_red2;<br>
+				us_blue2 = us_green2;<br>
+				<br>
+				ds_red2 = zeros(height_in * fc, width_in * fc);<br>
+				ds_green2 = ds_red2;<br>
+				ds_blue2 = ds_green2;<br>
+				<br>
+				for n = (1:(width_in * fc))<br>
+					us_red2(:, n) = upsample(ds_red1(:, n), us_height);<br>
+					us_green2(:, n) = upsample(ds_green1(:, n), us_height);<br>
+					us_blue2(:, n) = upsample(ds_blue1(:, n), us_height);<br>
+				end<br>
+				<br>
+				for n = (1:(width_in * fc))<br>
+					ds_red2(:, n) = downsample(us_red2(:, n), ds_height);<br>
+					ds_green2(:, n) = downsample(us_green2(:, n), ds_height;<br>
+					ds_blue2(:, n) = downsample(us_blue2(:, n), ds_height);<br>
+				end<br>
+				<br>
+				combined = (ds_red2 + ds_green2 + ds_blue2) ./ 3;<br>
+				combined = uint8(combined);<br>
+				<br>
+				figure();<br>
+				imshow(combined);<br>
+		</p>
+		<p>
+			The output isn't what we want it to be just yet.
+		</p>
+		<div class="underline"></div>
+		<h3>Output Image</h3>
+		<div class="underline"></div>
+		<div align="center">
+			<img class="sample1" src="http://i67.tinypic.com/24b96dk.jpg" />
+		</div>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>What we've done so far</h2>
+		<div class="underline"></div>
+		<p>
+			So far, we have figured out how to edge detect on each of the RBG layers of an image and combine them. <br><br>
+			We have also started the process of upsampling an image and then downsampling to get the desired stitches/inch and the desired height and width. <br><br>
+			The only way we have done it so far is with the upsample and downsample functions. We upsample our height by (fabric count * height in inches) and downsample the height by the original pixel height of the image. We do the same for the width but with the corresponding width values. <br><br>
+			The way that this upsamples is by placing in zeros, but we want to place in the nearest value in the newly sampled spots, so we are going to need to create a Matlab function to do this. <br>
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>Our plan</h2>
+		<div class="underline"></div>
+		<h3>Next week</h3>
+		<div class="underline"></div>
+		<ul>
+			<li>
+			Since next week is Thanksgiving break, and we are all going home for this, we will all be working individually. We will be processing our test images and other images to make sure our approach will give us the desired results. 
+			</li>
+			<br>
+			<li>
+			We will complete the upsampling function in Matlab that will act a little differently than the built-in Matlab upsample function. 
+			</li>
+			<br>
+			<li>
+			We will also create the part of the website that the user will interact with. This involves buttons, some way to input an image, and input fields for the fabric count, height and width.
+			</li>
+			<br>
+			<li>
+			By the end of this week hopefully we will have all of our test images edge detected, upsampled and downsampled.
+			</li>
+		</ul>
+		<div class="underline"></div>
+		<h3>The following week</h3>
+		<div class="underline"></div>
+		<ul>
+			<li>
+			During this week we are going to figure out how to combine the edge detected images and the sampled images to create our final cross-stitch pattern. 
+			</li>
+			<br>
+			<li>
+			We are also going to try images with a variety of different colors to make sure the combined pixel colors are not off.
+			</li>
+			<br>
+			<li>
+			We are also going to configure our project so that only a certain amount of colors are outputted. People who are cross-stitching don't have access to infinite string colors.
+			</li>
+			<br>
+			<li>
+			We need to configure the Matlab and website connections so that users are able to input their own images.
+			</li>
+		</ul>
+		<div class="underline"></div>
+		<h3>Final week</h3>
+		<div class="underline"></div>
+		<ul>
+			<li>
+			Ideally, the website will be done by now and we can continue to test and tweak it for a variety of images (not just our test images). 
+			</li>
+			<br>
+			<li>
+			If our image processing is slow, during this week is when we will try to optimize it.
+			</li>
+		</ul>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+	<div class="display">
+		<br>
+		<div class="underline"></div>
+		<h2>What we've learned</h2>
+		<div class="underline"></div>
+		<h3>Matlab Functions</h3>
+		<div class="underline"></div>
+		<h4>edge()</h4>
+		<div class="underline"></div>
+		<p>
+			We've found that the Sobel type of edge detection best fits our purposes. It only outlines the most important shapes. 
+		</p>
+		<p class="code">
+			image = imread('imagefile.jpg');<br>
+			image_edge = edge(image, 'Sobel');<br>
+		</p>
+		<div class="underline"></div>
+		<h4>downsample()</h4>
+		<div class="underline"></div>
+		<p>
+			Since we are taking a complex image with many, many pixels and colors we are going to need downsample the rows and columns. 
+		</p>
+		<p class="code">
+			x = [0 1 2 3 4 5 6 7 8 9 10];<br>
+			y = downsample(x, 2);<br>
+			y<br>
+			<br>
+			y = [0 2 4 6 8 10]<br>
+		</p>
+		<div class="underline"></div>
+		<h4>upsample()</h4>
+		<div class="underline"></div>
+		<p>
+			When deciding which value to downsample by (pixels / (length in inches * stitches per inch)) we sometimes get decimal results. In discrete signals, we cannot downsample by a decimal number. To avoid this, we upsample by the (length in inches * stitches per inch), and then downsample by the number of pixels. 
+		</p>
+		<p class="code">
+			x = [0 1 2 3 4 5 6 7 8 9 10]; <br>
+			y = upsample(x, 2);<br>
+			y<br>
+			<br>
+			x = [0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 0 10 0];<br>
+		</p>
+		<p>
+			Currently this does not work as we had hoped since it places in zeros in the new upsample spots. We are going to try to create a function to place in the previous value in the newly sampled index.
+		</p>
+		<div class="underline"></div>
+		<br>
+	</div>
+	<br><br>
+</div>

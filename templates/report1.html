@@ -1,0 +1,208 @@
+<div>
+    <div class="display">
+    	<br>
+        <div class="underline"></div>
+    	<h1>Project Idea Finalized</h1>
+        <div class="underline"></div>
+    	<br>
+    </div>
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Test Images</h2>
+        <div class="underline"></div>
+        <p>
+            From simple to more challenging. <br>
+            I started off with a stick person to make sure we are able to accurately detect edges
+            and form the general shapes of images. I then proceeded to pixel images because these have predefined
+            boxes which should make the creation of a cross-stich easier. After these, I chose some simple images that involve
+            a main focus, or simple shapes. My hardest images, the ones that will provide the most challenge, were intricate pictures
+            of animals and scenery. 
+        </p>
+        <div class="underline"></div>
+        <h3>Simple</h3>
+        <div class="underline"></div>
+        <br>
+        <div align="center">
+            <img src="http://i68.tinypic.com/2zqhixw.jpg">
+            <img src="http://i66.tinypic.com/25iqhwy.jpg">
+            <img src="http://i64.tinypic.com/e0pziu.jpg">
+            <img src="http://i65.tinypic.com/2rdz0vl.jpg">
+            <img src="http://i65.tinypic.com/21oxati.jpg">
+        </div>
+        <br>
+        <div class="underline"></div>
+        <h3>Intermediate</h3>
+        <div class="underline"></div>
+        <br>
+        <div align="center">
+            <img src="http://i68.tinypic.com/2euudeo.jpg">
+            <img src="http://i64.tinypic.com/2rcydex.jpg">
+            <img src="http://i67.tinypic.com/552mom.jpg">
+        </div>
+        <br>
+        <div class="underline"></div>
+        <h3>Complex</h3>
+        <div class="underline"></div>
+        <br>
+        <div align="center">
+            <img src="http://i67.tinypic.com/2mw5umv.jpg">
+            <img src="http://i63.tinypic.com/15qdzes.jpg">
+        </div>
+        <br>
+        <div class="underline"></div>
+        <br>
+    </div>
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Downsampling</h2>
+        <div class="underline"></div>
+        <h3>What is downsampling?</h3>
+        <div class="underline"></div>
+        <p>
+            Downsampling creates a lower-rate sequence by keeping 
+            only one out of N samples in the original signal. 
+            It discards (N - 1) out of N samples and causes a loss of 
+            information in the original sequence. <br>
+            X[n] -> X[N*n] <br>
+            X[n] = x[-2] x[1] x[0] x[1] x[2]...<br>
+            Downsampled...<br>
+            Xd[n] = x[-4] x[-2] x[0] x[2] x[4]...<br>
+        </p>
+        <div class="underline"></div>
+        <h3>What would direct downsampling do at different rates?</h3>
+        <div class="underline"></div>
+        <p>
+            You could get any size pixels-per-inch by downsampling and 
+            un-sampling back. The larger rate (or larger value of N) that you are 
+            downsampling by, the more information will be lost. In our case, we want this information loss. 
+            This loss of information provides us with fewer pixels to account for, thus equating pixels to stitches 
+            in the cross-stitch. 
+        </p>
+        <div class="underline"></div>
+        <br>
+    </div>  	
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Conversion</h2>
+        <div class="underline"></div>
+        <h3>How to convert an image of a certain pixel count?</h3>
+        <div class="underline"></div>
+        <p>
+            An image is sized pixels by pixels. 
+            A cross stitch is sized inches by inches. 
+            An important value is the amount of stitches/inch the 
+            cross-stitching fabric has. This is called fabric count. 
+            You would downsample each row and column by a value N. <br>
+            N = (Pixels)/(Inches*Count) <br>
+            Inches = the length of the height/width of the column/row. <br>
+            Pixels = the amount of pixels in the column/row of the image. <br> 
+            Count = fabric count, or stitches/inch. <br>
+        </p>
+        <div class="underline"></div>
+        <h3>Common Fabric Counts</h3>
+        <div class="underline"></div>
+        <p>
+            11, 14, 18, 28 <br>
+            I think this will be an option for the user to input themselves. Since we are using Matlab for 
+            everything we will be able to have variables that input to functions, and can have any values attached to
+            these variables (within reason).
+        </p>
+        <br>
+        <div class="underline"></div>
+    </div>   
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Edge Detection</h2>
+        <div class="underline"></div>
+        <p>
+            Matlab has built-in functions that detect edges in images. 
+            There are two different types. 
+            The first type is called "Sobel." This type creates a new 
+            image with only general outlines of shapes in it. I think this 
+            type would be more relevant for our project since only the most 
+            important shapes need to be outlined. 
+            The second type is called "Canny." This type creates a new image 
+            with basically every outline in it. This one creates an edge for any 
+            discontinuity in the picture. I don't think this one would be good for 
+            our project because if we were to have edge around every single 
+            discontinuity, our cross-stitch would have too many outlines. The 
+            actual cross-stitch would be lost. <br><br>
+            I think the best way to utilize this edge detection would be for creating
+            the black lines that so often surround cross-stitching shapes to better define them.
+            We will create the downsampled image, the actual cross-stitches. Then, we will create the edge
+            detected image. We will overlay this edge detected image over the downsampled image at the end
+            to create our final cross-stitch, both stitches and edges. 
+        </p>
+        <div class="underline"></div>
+        <h3>Matlab Code</h3>
+        <div class="underline"></div>
+        <p class="code">
+            I = imread('flower.jpg'); <br>
+            BW1 = edge(I(:,:,1),'sobel',.12); <br>
+            BW2 = edge(I(:,:,1),'sobel'); <br>
+            BW3 = edge(I(:,:,3),'canny'); <br>
+            figure; <br>
+            imshowpair(BW1,BW2,'montage'); <br>
+            figure; <br>
+            imshow(BW3); <br><br><br>
+        </p>
+        <div class="underline"></div>
+        <br>
+    </div>
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Color Perception</h2>
+        <div class="underline"></div>
+        <p>
+            Our eyes percieve the relative brightness of colors. The scale is roughly logarithmic, not linear. Computers store brightness values on a scale that matches our perception (by taking the square root of the actual brightness value). <br><br>
+            Pixels are represented by 3 numbers, their RGB values. When working with these pixel values, we will need to square them before performing operations, and then take the square root after performing the operation. <br><br>
+            We are going to be manipulating these color values in images because not all colors will be able to be represented in a cross-stich. We will have to round certain colors up or down to achieve one within a range. 
+        </p>
+        <div class="underline"></div>
+        <br>
+    </div>
+    <br><br>
+    <div class="display">
+        <br>
+        <div class="underline"></div>
+        <h2>Reviews of Sites</h2>
+        <div class="underline"></div>
+        <h3>First Site (pic2pat)</h3>
+        <div class="underline"></div>
+        <p>
+            I really liked this site. I thought it was cool how it gave you a couple 
+            options at the end, so you can choose the one you prefer. 
+            Earlier I was thinking I would output the cross-stitch patterns in symbols, 
+            how cross-stitch patterns in books look, but I think that since we are processing images
+            of pixels it will be easier to do the colored boxes, similarly the how this website did. 
+            This website is pretty poorly designed, though. 
+            I'm thinking I will take how they handled their input, with the length/width and 
+            stitches/inch. I don't want to output many cross-stich patterns at the end, only 
+            one good one.
+            I also don't want to ask which type of thread the user is using, I will just output the
+            most relevant colors and they can choose whichever thread they feel best matches. 
+        </p>
+        <div class="underline"></div>
+        <h3>Second Site (myphotostitch)</h3>
+        <div class="underline"></div>
+        <p>
+            I liked this site less. This website only worked well for big pictures. The 
+            pictures come out really tiny if you don't. It was nice how they gave you the 
+            option to print out in either symbols or in colored boxes. 
+            I also thought this website was poorly designed. 
+        </p>
+        <div class="underline"></div>
+        <br>
+    </div>
+    <br><br>
+</div>
